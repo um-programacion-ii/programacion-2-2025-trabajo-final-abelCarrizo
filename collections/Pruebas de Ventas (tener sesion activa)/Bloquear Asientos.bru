@@ -1,0 +1,20 @@
+meta {
+  name: Bloquear Asientos
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8080/api/ventas/bloquear
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqdWFuIiwiaWF0IjoxNzY0ODk2MzY1LCJleHAiOjE3NjQ4OTgxNjV9.ZLc9Y9ZQ1Xk7O7D_6CMs7TuKicX32i68P4HE8aVkQV_0QTEQwsqatWcRlM5Ry7YtgSiPZQHgtMSTIGFIUBvw-w
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

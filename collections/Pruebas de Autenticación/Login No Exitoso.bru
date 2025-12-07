@@ -1,0 +1,27 @@
+meta {
+  name: Login No Exitoso
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8080/api/auth/login
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+      "username": "abel",
+      "password": "contraseña_incorrecta"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
