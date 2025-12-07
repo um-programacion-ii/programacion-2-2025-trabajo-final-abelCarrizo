@@ -1,0 +1,27 @@
+meta {
+  name: Cancelar proceso de compra
+  type: http
+  seq: 6
+}
+
+post {
+  url: http://localhost:8080/api/ventas/cancelar
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqdWFuIiwiaWF0IjoxNzY0ODk2MzY1LCJleHAiOjE3NjQ4OTgxNjV9.ZLc9Y9ZQ1Xk7O7D_6CMs7TuKicX32i68P4HE8aVkQV_0QTEQwsqatWcRlM5Ry7YtgSiPZQHgtMSTIGFIUBvw-w
+}
+
+body:json {
+  {
+      "exito": true,
+      "mensaje": "Proceso cancelado correctamente"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

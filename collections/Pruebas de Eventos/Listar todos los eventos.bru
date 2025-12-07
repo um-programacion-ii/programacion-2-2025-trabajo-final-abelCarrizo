@@ -1,0 +1,20 @@
+meta {
+  name: Listar todos los eventos
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:8080/api/eventos
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmVsIiwiaWF0IjoxNzY0ODk0OTA2LCJleHAiOjE3NjQ4OTY3MDZ9.w_kHAVLjreG8U3nkvPwTdXkjPrk3KiWP6fbR0g-v7dtDgryiX-1p7Ky6R-bebqtDD2zP3SLKx57ZjuHuPwlIOw
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
