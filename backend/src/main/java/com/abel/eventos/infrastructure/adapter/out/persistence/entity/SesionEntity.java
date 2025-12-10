@@ -36,9 +36,8 @@ public class SesionEntity {
     @JoinColumn(name = "usuario_id", nullable = false)
     private UsuarioEntity usuario;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "evento_id")
-    private EventoEntity evento;
+    @Column(name = "evento_id")
+    private Long eventoId;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
