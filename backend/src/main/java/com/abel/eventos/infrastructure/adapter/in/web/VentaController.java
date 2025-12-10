@@ -1,7 +1,9 @@
 package com.abel.eventos.infrastructure.adapter.in.web;
 
 import com.abel.eventos.application.port.in.RealizarVentaUseCase;
+import com.abel.eventos.application.port.out.UsuarioRepositoryPort;
 import com.abel.eventos.domain.model.Asiento;
+import com.abel.eventos.domain.model.Usuario;
 import com.abel.eventos.domain.model.Venta;
 import com.abel.eventos.infrastructure.adapter.in.web.dto.AsientoRequest;
 import com.abel.eventos.infrastructure.adapter.in.web.dto.AsientoResponse;
@@ -27,6 +29,7 @@ import java.util.List;
 public class VentaController {
 
     private final RealizarVentaUseCase realizarVentaUseCase;
+    private final UsuarioRepositoryPort usuarioRepositoryPort;
     private final JwtService jwtService;
 
     @PostMapping("/seleccionar")
@@ -138,8 +141,10 @@ public class VentaController {
     private Long extraerUsuarioId(String authHeader) {
         String token = authHeader.replace("Bearer ", "");
         String username = jwtService.extraerUsername(token);
-        // TODO: Obtener el ID real del usuario desde el username
-        return 1L;
+
+        return usuarioRepositoryPort.buscarPorUsername(username)
+                .map(Usuario::getId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + username));
     }
 
     private Asiento toAsientoDomain(AsientoRequest request) {
