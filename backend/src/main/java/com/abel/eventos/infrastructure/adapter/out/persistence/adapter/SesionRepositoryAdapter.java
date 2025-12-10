@@ -3,7 +3,6 @@ package com.abel.eventos.infrastructure.adapter.out.persistence.adapter;
 import com.abel.eventos.application.port.out.SesionRepositoryPort;
 import com.abel.eventos.domain.model.Asiento;
 import com.abel.eventos.domain.model.Sesion;
-import com.abel.eventos.infrastructure.adapter.out.persistence.entity.EventoEntity;
 import com.abel.eventos.infrastructure.adapter.out.persistence.entity.SesionAsientoEntity;
 import com.abel.eventos.infrastructure.adapter.out.persistence.entity.SesionEntity;
 import com.abel.eventos.infrastructure.adapter.out.persistence.entity.UsuarioEntity;
@@ -74,12 +73,8 @@ public class SesionRepositoryAdapter implements SesionRepositoryPort {
             entity.setUsuario(usuarioRef);
         }
 
-        // Referencia al evento (puede ser null al inicio)
-        if (sesion.getEventoId() != null) {
-            EventoEntity eventoRef = new EventoEntity();
-            eventoRef.setId(sesion.getEventoId());
-            entity.setEvento(eventoRef);
-        }
+        // Guardar evento ID directamente (sin relación JPA)
+        entity.setEventoId(sesion.getEventoId());
 
         // Convertir asientos seleccionados
         if (sesion.getAsientosSeleccionados() != null) {
@@ -109,9 +104,8 @@ public class SesionRepositoryAdapter implements SesionRepositoryPort {
             sesion.setUsuarioId(entity.getUsuario().getId());
         }
 
-        if (entity.getEvento() != null) {
-            sesion.setEventoId(entity.getEvento().getId());
-        }
+        // Obtener evento ID directamente
+        sesion.setEventoId(entity.getEventoId());
 
         // Convertir asientos seleccionados
         if (entity.getAsientosSeleccionados() != null) {
