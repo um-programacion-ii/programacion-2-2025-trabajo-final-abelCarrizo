@@ -1,7 +1,9 @@
 package com.abel.eventos.infrastructure.adapter.in.web;
 
 import com.abel.eventos.application.port.in.GestionSesionUseCase;
+import com.abel.eventos.application.port.out.UsuarioRepositoryPort;
 import com.abel.eventos.domain.model.Sesion;
+import com.abel.eventos.domain.model.Usuario;
 import com.abel.eventos.infrastructure.adapter.in.web.dto.AsientoResponse;
 import com.abel.eventos.infrastructure.adapter.in.web.dto.IniciarSesionRequest;
 import com.abel.eventos.infrastructure.adapter.in.web.dto.SesionResponse;
@@ -24,6 +26,7 @@ import java.util.List;
 public class SesionController {
 
     private final GestionSesionUseCase gestionSesionUseCase;
+    private final UsuarioRepositoryPort usuarioRepositoryPort;
     private final JwtService jwtService;
 
     @GetMapping
@@ -86,12 +89,12 @@ public class SesionController {
     // === Métodos auxiliares ===
 
     private Long extraerUsuarioId(String authHeader) {
-        // Por ahora retornamos un ID fijo.
-        // En una implementación completa, extraeríamos el ID del token.
         String token = authHeader.replace("Bearer ", "");
         String username = jwtService.extraerUsername(token);
-        // TODO: Obtener el ID real del usuario desde el username
-        return 1L;
+
+        return usuarioRepositoryPort.buscarPorUsername(username)
+                .map(Usuario::getId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + username));
     }
 
     private SesionResponse toSesionResponse(Sesion sesion, String mensaje) {
