@@ -14,6 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.abel.mobile.ui.screens.login.LoginScreen
 import org.abel.mobile.ui.screens.eventos.EventosListScreen
+import org.abel.mobile.ui.screens.detalle.EventoDetalleScreen
+import org.abel.mobile.ui.screens.asientos.SeleccionAsientosScreen
 
 /**
  * Define todas las rutas de navegación de la app.
@@ -62,8 +64,7 @@ fun AppNavigation(
             )
         ) { backStackEntry ->
             val eventoId = backStackEntry.arguments?.getLong("eventoId") ?: 0L
-            // TODO: EventoDetalleScreen(eventoId, navController)
-            PlaceholderScreen("Detalle Evento #$eventoId", navController)
+            EventoDetalleScreen(eventoId, navController)
         }
 
         // Pantalla de Selección de Asientos (con parámetro)
@@ -74,8 +75,7 @@ fun AppNavigation(
             )
         ) { backStackEntry ->
             val eventoId = backStackEntry.arguments?.getLong("eventoId") ?: 0L
-            // TODO: SeleccionAsientosScreen(eventoId, navController)
-            PlaceholderScreen("Selección Asientos #$eventoId", navController)
+            SeleccionAsientosScreen(eventoId, navController)
         }
 
         // Pantalla de Datos Personales
