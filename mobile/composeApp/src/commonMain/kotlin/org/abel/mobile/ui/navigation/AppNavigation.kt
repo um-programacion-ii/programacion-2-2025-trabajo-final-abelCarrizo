@@ -12,6 +12,8 @@ import androidx.compose.material3.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import org.abel.mobile.ui.screens.login.LoginScreen
+import org.abel.mobile.ui.screens.eventos.EventosListScreen
 
 /**
  * Define todas las rutas de navegación de la app.
@@ -44,14 +46,12 @@ fun AppNavigation(
     ) {
         // Pantalla de Login
         composable(AppRoutes.LOGIN) {
-            // TODO: LoginScreen(navController)
-            PlaceholderScreen("Login", navController)
+            LoginScreen(navController)
         }
 
         // Pantalla de Lista de Eventos
         composable(AppRoutes.EVENTOS) {
-            // TODO: EventosListScreen(navController)
-            PlaceholderScreen("Lista de Eventos", navController)
+            EventosListScreen(navController)
         }
 
         // Pantalla de Detalle de Evento (con parámetro)
