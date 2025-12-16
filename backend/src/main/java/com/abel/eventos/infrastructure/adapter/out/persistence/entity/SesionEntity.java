@@ -49,6 +49,6 @@ public class SesionEntity {
     @Column(nullable = false)
     private Instant ultimaActividad;
 
-    @OneToMany(mappedBy = "sesion", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "sesion", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<SesionAsientoEntity> asientosSeleccionados;
 }
