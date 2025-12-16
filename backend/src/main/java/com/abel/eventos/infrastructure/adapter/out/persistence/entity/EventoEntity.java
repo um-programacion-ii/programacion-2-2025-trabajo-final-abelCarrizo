@@ -3,14 +3,13 @@ package com.abel.eventos.infrastructure.adapter.out.persistence.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.CascadeType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,7 +26,7 @@ import java.util.List;
 public class EventoEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // SIN @GeneratedValue - Los IDs vienen de Cátedra
     private Long id;
 
     @Column(nullable = false, length = 200)
@@ -57,11 +56,11 @@ public class EventoEntity {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal precioEntrada;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "evento_tipo_id")
     private EventoTipoEntity eventoTipo;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "evento_integrantes",
             joinColumns = @JoinColumn(name = "evento_id"),

@@ -14,6 +14,8 @@ import java.util.List;
 public class Venta {
 
     private Long id;
+    private Long ventaIdCatedra;
+    private Long usuarioId;
     private Long eventoId;
     private Instant fechaVenta;
     private BigDecimal precioVenta;

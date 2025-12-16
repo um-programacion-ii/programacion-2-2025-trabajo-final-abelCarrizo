@@ -295,7 +295,8 @@ public class CatedraServiceAdapter implements CatedraServicePort {
 
     private Venta toVenta(CatedraVentaResponseDTO dto) {
         Venta venta = new Venta();
-        venta.setId(dto.getVentaId());
+        // NO setear venta.setId() - dejar que JPA genere el ID local
+        venta.setVentaIdCatedra(dto.getVentaId());  // Guardar ID de Cátedra por separado
         venta.setEventoId(dto.getEventoId());
         venta.setFechaVenta(parseFecha(dto.getFechaVenta()));
         venta.setPrecioVenta(dto.getPrecioVenta());
