@@ -4,10 +4,10 @@ import com.abel.eventos.application.port.out.VentaRepositoryPort;
 import com.abel.eventos.domain.model.Asiento;
 import com.abel.eventos.domain.model.AsientoEstado;
 import com.abel.eventos.domain.model.Venta;
-import com.abel.eventos.infrastructure.adapter.out.persistence.entity.EventoEntity;
 import com.abel.eventos.infrastructure.adapter.out.persistence.entity.VentaAsientoEntity;
 import com.abel.eventos.infrastructure.adapter.out.persistence.entity.VentaEntity;
 import com.abel.eventos.infrastructure.adapter.out.persistence.repository.VentaJpaRepository;
+import com.abel.eventos.infrastructure.adapter.out.persistence.entity.UsuarioEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -59,17 +59,22 @@ public class VentaRepositoryAdapter implements VentaRepositoryPort {
 
     private VentaEntity toEntity(Venta venta) {
         VentaEntity entity = new VentaEntity();
-        entity.setId(venta.getId());
+
+        if (venta.getId() != null) {
+            entity.setId(venta.getId());
+        }
+        entity.setVentaIdCatedra(venta.getVentaIdCatedra());
+        entity.setEventoId(venta.getEventoId());
         entity.setFechaVenta(venta.getFechaVenta());
         entity.setPrecioVenta(venta.getPrecioVenta());
         entity.setResultado(venta.getResultado());
         entity.setDescripcion(venta.getDescripcion());
 
-        // Crear referencia al evento
-        if (venta.getEventoId() != null) {
-            EventoEntity eventoRef = new EventoEntity();
-            eventoRef.setId(venta.getEventoId());
-            entity.setEvento(eventoRef);
+        // Mapear usuario
+        if (venta.getUsuarioId() != null) {
+            UsuarioEntity usuarioRef = new UsuarioEntity();
+            usuarioRef.setId(venta.getUsuarioId());
+            entity.setUsuario(usuarioRef);
         }
 
         // Convertir asientos
@@ -92,13 +97,16 @@ public class VentaRepositoryAdapter implements VentaRepositoryPort {
     private Venta toDomain(VentaEntity entity) {
         Venta venta = new Venta();
         venta.setId(entity.getId());
+        venta.setVentaIdCatedra(entity.getVentaIdCatedra());
+        venta.setEventoId(entity.getEventoId());
         venta.setFechaVenta(entity.getFechaVenta());
         venta.setPrecioVenta(entity.getPrecioVenta());
         venta.setResultado(entity.getResultado());
         venta.setDescripcion(entity.getDescripcion());
 
-        if (entity.getEvento() != null) {
-            venta.setEventoId(entity.getEvento().getId());
+        // Mapear usuario
+        if (entity.getUsuario() != null) {
+            venta.setUsuarioId(entity.getUsuario().getId());
         }
 
         // Convertir asientos

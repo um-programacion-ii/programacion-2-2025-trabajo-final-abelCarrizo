@@ -19,6 +19,7 @@ public class IntegranteEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // Los IDs se generan localmente (Cátedra NO envía IDs para Integrantes)
     private Long id;
 
     @Column(nullable = false, length = 100)

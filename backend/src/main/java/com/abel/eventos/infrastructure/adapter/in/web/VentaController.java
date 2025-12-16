@@ -132,8 +132,12 @@ public class VentaController {
 
         Long usuarioId = extraerUsuarioId(authHeader);
 
-        realizarVentaUseCase.cancelarProceso(usuarioId);
-        return ResponseEntity.ok(new MensajeResponse(true, "Proceso cancelado correctamente"));
+        try {
+            realizarVentaUseCase.cancelarProceso(usuarioId);
+            return ResponseEntity.ok(new MensajeResponse(true, "Proceso cancelado correctamente"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(new MensajeResponse(false, e.getMessage()));
+        }
     }
 
     // === Métodos auxiliares ===

@@ -30,12 +30,14 @@ public class VentaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "evento_id", nullable = false)
-    private EventoEntity evento;
+    @Column(name = "venta_id_catedra")
+    private Long ventaIdCatedra;  // ID que devuelve Cátedra
+
+    @Column(name = "evento_id", nullable = false)
+    private Long eventoId;  // Solo guardar el ID, sin relación JPA
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id", nullable = false)
+    @JoinColumn(name = "usuario_id")
     private UsuarioEntity usuario;
 
     @Column(nullable = false)
