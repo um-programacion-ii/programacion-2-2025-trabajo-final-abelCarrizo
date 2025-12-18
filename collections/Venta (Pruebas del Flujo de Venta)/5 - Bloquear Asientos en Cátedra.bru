@@ -1,0 +1,20 @@
+meta {
+  name: 5 - Bloquear Asientos en Cátedra
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{backend_url}}/api/ventas/bloquear
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3VhcmlvX3BydWViYSIsImlhdCI6MTc2NTc1NzEzMiwiZXhwIjoxNzY1NzU4OTMyfQ.3BOcGOwqBHc16BA-dGTSIaSO1YvSMbS_vXkRa6KMPK-i0Ulei70J6fEUfO1Dmx188VZ16BGF1Bfhxf2-pj4u1w
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

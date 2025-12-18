@@ -1,0 +1,30 @@
+meta {
+  name: 1 - Preparación - Iniciar Nueva Sesión
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{backend_url}}/api/sesion/iniciar
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3VhcmlvX3BydWViYSIsImlhdCI6MTc2NTc2NTM1OCwiZXhwIjoxNzY1NzY3MTU4fQ.UCq61wTm4esUEgsM3X6dsXAQoUXjHIOpE4dSz9DLzAjt5uXcCFQqfw7b5nOqueUOnxs4T3ZuwSZ7TrzO_V8yyg
+}
+
+body:json {
+  {
+      "eventoId": 1
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

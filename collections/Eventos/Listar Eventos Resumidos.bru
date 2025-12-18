@@ -1,0 +1,20 @@
+meta {
+  name: Listar Eventos Resumidos
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{backend_url}}/api/eventos
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3VhcmlvX3BydWViYSIsImlhdCI6MTc2NTc1NjQzNywiZXhwIjoxNzY1NzU4MjM3fQ.x-kwnZqb_Y31rkPVNeNoTcdU8kvEwGHop5WnwG8ytUBo1NY819TQQ_sDV2V71OXTaP4PyYdGKU5WWBGoyXTKRw
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

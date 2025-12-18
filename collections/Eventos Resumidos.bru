@@ -1,0 +1,20 @@
+meta {
+  name: Eventos Resumidos
+  type: http
+  seq: 9
+}
+
+get {
+  url: http://192.168.194.250:8080/api/endpoints/v1/eventos-resumidos
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmVsY2Fycml6byIsImV4cCI6MTc2ODM0ODUzMSwiYXV0aCI6IlJPTEVfVVNFUiIsImlhdCI6MTc2NTc1NjUzMX0.p5w_lF-FaSrZO8YqgXOMVOZIoFxtVdGHjkoNiakCqLFNnOcr_zPNrdEp6bu_TSKXzuUDfDar0j_pbWlZl6BpmA
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

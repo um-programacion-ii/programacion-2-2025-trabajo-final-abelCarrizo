@@ -1,0 +1,23 @@
+meta {
+  name: Obtener Token Catedra
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://192.168.194.250:8080/api/authenticate
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "username": "abelcarrizo",
+      "password": "password"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

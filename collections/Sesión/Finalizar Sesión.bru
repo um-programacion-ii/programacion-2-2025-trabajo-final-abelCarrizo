@@ -1,0 +1,20 @@
+meta {
+  name: Finalizar Sesión
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{backend_url}}/api/sesion/finalizar
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3VhcmlvX3BydWViYSIsImlhdCI6MTc2NTMwNTg0MywiZXhwIjoxNzY1MzA3NjQzfQ.SxWvj8u36lwMxj0CyTrZ38ZybJz-GUyn8pC2jEYeT_RAIjEyy_cPpB1EuBwPF8allPvelqWzRVbJCvPWuRKG9g
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

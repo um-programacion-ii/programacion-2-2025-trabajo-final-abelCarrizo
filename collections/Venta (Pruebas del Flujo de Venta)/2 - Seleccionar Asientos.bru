@@ -1,0 +1,34 @@
+meta {
+  name: 2 - Seleccionar Asientos
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{backend_url}}/api/ventas/seleccionar
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3VhcmlvX3BydWViYSIsImlhdCI6MTc2NTc1NzEzMiwiZXhwIjoxNzY1NzU4OTMyfQ.3BOcGOwqBHc16BA-dGTSIaSO1YvSMbS_vXkRa6KMPK-i0Ulei70J6fEUfO1Dmx188VZ16BGF1Bfhxf2-pj4u1w
+}
+
+body:json {
+  {
+      "eventoId": 1,
+      "asientos": [
+          {"fila": 5, "columna": 10},
+          {"fila": 5, "columna": 11}
+      ]
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
