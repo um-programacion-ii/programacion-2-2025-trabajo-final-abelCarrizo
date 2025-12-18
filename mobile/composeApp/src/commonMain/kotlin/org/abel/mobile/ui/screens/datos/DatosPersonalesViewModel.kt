@@ -11,12 +11,13 @@ import org.abel.mobile.data.model.Asiento
 import org.abel.mobile.util.SessionManager
 
 /**
- * Representa un asiento con su campo de nombre editable.
+ * Representa un asiento con su campo de nombre editable y error de validación.
  */
 data class AsientoConNombre(
     val fila: Int,
     val columna: Int,
-    var nombre: String = ""
+    var nombre: String = "",
+    var error: String? = null  // Error de validación
 )
 
 /**
@@ -40,6 +41,10 @@ class DatosPersonalesViewModel : ViewModel() {
 
     private val asientosConNombre = mutableListOf<AsientoConNombre>()
 
+    companion object {
+        const val MIN_NOMBRE_LENGTH = 3
+    }
+
     init {
         SessionManager.token?.let { apiClient.setToken(it) }
         cargarAsientosSeleccionados()
@@ -53,7 +58,6 @@ class DatosPersonalesViewModel : ViewModel() {
 
         viewModelScope.launch {
             try {
-                // Obtener sesión actual con los asientos bloqueados
                 val sesion = apiClient.obtenerSesionActual()
 
                 if (sesion.asientosSeleccionados.isNullOrEmpty()) {
@@ -61,14 +65,14 @@ class DatosPersonalesViewModel : ViewModel() {
                     return@launch
                 }
 
-                // Convertir a modelo con nombre editable
                 asientosConNombre.clear()
                 sesion.asientosSeleccionados.forEach { asiento ->
                     asientosConNombre.add(
                         AsientoConNombre(
                             fila = asiento.fila,
                             columna = asiento.columna,
-                            nombre = asiento.persona ?: ""
+                            nombre = asiento.persona ?: "",
+                            error = null
                         )
                     )
                 }
@@ -84,7 +88,7 @@ class DatosPersonalesViewModel : ViewModel() {
     }
 
     /**
-     * Actualiza el nombre de un asiento.
+     * Actualiza el nombre de un asiento y limpia su error.
      */
     fun onNombreChange(fila: Int, columna: Int, nombre: String) {
         val index = asientosConNombre.indexOfFirst {
@@ -92,39 +96,66 @@ class DatosPersonalesViewModel : ViewModel() {
         }
 
         if (index != -1) {
-            asientosConNombre[index] = asientosConNombre[index].copy(nombre = nombre)
+            asientosConNombre[index] = asientosConNombre[index].copy(
+                nombre = nombre,
+                error = null  // Limpiar error al escribir
+            )
             _uiState.value = DatosUiState.Success(asientosConNombre.toList())
         }
     }
 
     /**
-     * Valida que todos los asientos tengan nombre.
+     * Valida un nombre individual.
      */
-    fun validarNombres(): Boolean {
-        return asientosConNombre.all { it.nombre.isNotBlank() }
+    private fun validarNombre(nombre: String): String? {
+        return when {
+            nombre.isBlank() -> "El nombre es requerido"
+            nombre.trim().length < MIN_NOMBRE_LENGTH -> "Mínimo $MIN_NOMBRE_LENGTH caracteres"
+            else -> null
+        }
+    }
+
+    /**
+     * Valida todos los nombres y actualiza los errores.
+     * Retorna true si todos son válidos.
+     */
+    private fun validarTodosLosNombres(): Boolean {
+        var todosValidos = true
+
+        asientosConNombre.forEachIndexed { index, asiento ->
+            val error = validarNombre(asiento.nombre)
+            asientosConNombre[index] = asiento.copy(error = error)
+            if (error != null) {
+                todosValidos = false
+            }
+        }
+
+        // Actualizar UI con los errores
+        _uiState.value = DatosUiState.Success(asientosConNombre.toList())
+
+        return todosValidos
     }
 
     /**
      * Asigna las personas a los asientos y continúa.
      */
     fun confirmarDatos(onSuccess: () -> Unit, onError: (String) -> Unit) {
-        if (!validarNombres()) {
-            onError("Todos los asientos deben tener un nombre asignado")
+        // Validar todos los nombres
+        if (!validarTodosLosNombres()) {
+            onError("Corrige los errores en los nombres")
             return
         }
 
         viewModelScope.launch {
             try {
-                // Convertir a modelo de API
                 val asientosApi = asientosConNombre.map {
                     Asiento(
                         fila = it.fila,
                         columna = it.columna,
-                        persona = it.nombre
+                        persona = it.nombre.trim()
                     )
                 }
 
-                // Llamar al endpoint de asignar personas
                 val resultado = apiClient.asignarPersonas(asientosApi)
 
                 if (resultado.exito) {

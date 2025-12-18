@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -23,12 +24,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -51,12 +55,37 @@ fun DatosPersonalesScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
+    var mostrarDialogoSalir by remember { mutableStateOf(false) }
+
+    if (mostrarDialogoSalir) {
+        AlertDialog(
+            onDismissRequest = { mostrarDialogoSalir = false },
+            title = { Text("¿Abandonar datos?") },
+            text = { Text("Los nombres ingresados se perderán y deberás volver a seleccionar los asientos.") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        mostrarDialogoSalir = false
+                        navController.popBackStack()
+                    }
+                ) {
+                    Text("Sí, salir", color = MaterialTheme.colorScheme.error)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { mostrarDialogoSalir = false }) {
+                    Text("Continuar editando")
+                }
+            }
+        )
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("Datos de los Asistentes") },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { mostrarDialogoSalir = true }) {
                         Text("←", style = MaterialTheme.typography.titleLarge)
                     }
                 }
@@ -148,7 +177,6 @@ fun DatosContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Lista de asientos con campos de nombre
         LazyColumn(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -165,7 +193,6 @@ fun DatosContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Botón continuar
         Button(
             onClick = onContinuar,
             modifier = Modifier.fillMaxWidth()
@@ -176,7 +203,7 @@ fun DatosContent(
 }
 
 /**
- * Card con información del asiento y campo de nombre.
+ * Card con información del asiento y campo de nombre con validación.
  */
 @Composable
 fun AsientoNombreCard(
@@ -215,7 +242,16 @@ fun AsientoNombreCard(
                 label = { Text("Nombre completo") },
                 placeholder = { Text("Ej: Juan Pérez") },
                 singleLine = true,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                isError = asiento.error != null,
+                supportingText = {
+                    asiento.error?.let {
+                        Text(
+                            text = it,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
             )
         }
     }
