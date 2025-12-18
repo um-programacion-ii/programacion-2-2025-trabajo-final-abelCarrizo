@@ -20,6 +20,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -31,6 +32,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import org.abel.mobile.data.model.EventoResumen
 import org.abel.mobile.ui.navigation.AppRoutes
+import org.abel.mobile.util.SessionManager
 
 /**
  * Pantalla que muestra la lista de eventos.
@@ -46,7 +48,23 @@ fun EventosListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Eventos Disponibles") }
+                title = { Text("Eventos Disponibles") },
+                actions = {
+                    // Botón cerrar sesión
+                    TextButton(
+                        onClick = {
+                            // 1. Limpiar la sesión
+                            SessionManager.clearSession()
+
+                            // 2. Navegar a Login limpiando todo el stack
+                            navController.navigate(AppRoutes.LOGIN) {
+                                popUpTo(0) { inclusive = true }
+                            }
+                        }
+                    ) {
+                        Text("Salir")
+                    }
+                }
             )
         }
     ) { paddingValues ->
@@ -57,14 +75,12 @@ fun EventosListScreen(
         ) {
             when (val state = uiState) {
                 is EventosUiState.Loading -> {
-                    // Mostrar loading centrado
                     CircularProgressIndicator(
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
 
                 is EventosUiState.Error -> {
-                    // Mostrar error con botón de reintentar
                     Column(
                         modifier = Modifier
                             .align(Alignment.Center)
@@ -84,13 +100,11 @@ fun EventosListScreen(
 
                 is EventosUiState.Success -> {
                     if (state.eventos.isEmpty()) {
-                        // Lista vacía
                         Text(
                             text = "No hay eventos disponibles",
                             modifier = Modifier.align(Alignment.Center)
                         )
                     } else {
-                        // Mostrar lista de eventos
                         LazyColumn(
                             modifier = Modifier.fillMaxSize(),
                             verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -132,7 +146,6 @@ fun EventoCard(
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            // Título
             Text(
                 text = evento.titulo,
                 style = MaterialTheme.typography.titleMedium
@@ -140,7 +153,6 @@ fun EventoCard(
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            // Resumen
             evento.resumen?.let { resumen ->
                 Text(
                     text = resumen,
@@ -151,7 +163,6 @@ fun EventoCard(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Tipo y Precio
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -174,4 +185,3 @@ fun EventoCard(
         }
     }
 }
-

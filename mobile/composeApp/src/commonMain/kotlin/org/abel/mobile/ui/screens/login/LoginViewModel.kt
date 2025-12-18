@@ -13,10 +13,10 @@ import org.abel.mobile.util.SessionManager
  * Representa los posibles estados de la pantalla de Login.
  */
 sealed class LoginUiState {
-    object Idle : LoginUiState()                    // Estado inicial, esperando input
-    object Loading : LoginUiState()                 // Haciendo login...
-    object Success : LoginUiState()                 // Login exitoso
-    data class Error(val mensaje: String) : LoginUiState()  // Error con mensaje
+    object Idle : LoginUiState()
+    object Loading : LoginUiState()
+    object Success : LoginUiState()
+    data class Error(val mensaje: String) : LoginUiState()
 }
 
 /**
@@ -38,11 +38,25 @@ class LoginViewModel : ViewModel() {
     private val _password = MutableStateFlow("")
     val password: StateFlow<String> = _password.asStateFlow()
 
+    // Errores de validación por campo
+    private val _usernameError = MutableStateFlow<String?>(null)
+    val usernameError: StateFlow<String?> = _usernameError.asStateFlow()
+
+    private val _passwordError = MutableStateFlow<String?>(null)
+    val passwordError: StateFlow<String?> = _passwordError.asStateFlow()
+
+    companion object {
+        const val MIN_USERNAME_LENGTH = 3
+        const val MIN_PASSWORD_LENGTH = 4
+    }
+
     /**
      * Actualiza el username cuando el usuario escribe.
      */
     fun onUsernameChange(value: String) {
         _username.value = value
+        // Limpiar error al escribir
+        _usernameError.value = null
     }
 
     /**
@@ -50,42 +64,75 @@ class LoginViewModel : ViewModel() {
      */
     fun onPasswordChange(value: String) {
         _password.value = value
+        // Limpiar error al escribir
+        _passwordError.value = null
+    }
+
+    /**
+     * Valida el formulario y retorna true si es válido.
+     */
+    private fun validarFormulario(): Boolean {
+        var esValido = true
+
+        // Validar username
+        when {
+            _username.value.isBlank() -> {
+                _usernameError.value = "El usuario es requerido"
+                esValido = false
+            }
+            _username.value.trim().length < MIN_USERNAME_LENGTH -> {
+                _usernameError.value = "Mínimo $MIN_USERNAME_LENGTH caracteres"
+                esValido = false
+            }
+            else -> {
+                _usernameError.value = null
+            }
+        }
+
+        // Validar password
+        when {
+            _password.value.isBlank() -> {
+                _passwordError.value = "La contraseña es requerida"
+                esValido = false
+            }
+            _password.value.length < MIN_PASSWORD_LENGTH -> {
+                _passwordError.value = "Mínimo $MIN_PASSWORD_LENGTH caracteres"
+                esValido = false
+            }
+            else -> {
+                _passwordError.value = null
+            }
+        }
+
+        return esValido
     }
 
     /**
      * Ejecuta el login contra el Backend.
      */
     fun login() {
-        // Validación básica
-        if (_username.value.isBlank() || _password.value.isBlank()) {
-            _uiState.value = LoginUiState.Error("Usuario y contraseña son requeridos")
+        // Validar formulario primero
+        if (!validarFormulario()) {
             return
         }
 
         // Cambiar a estado Loading
         _uiState.value = LoginUiState.Loading
 
-        // Ejecutar en coroutine (no bloquea la UI)
+        // Ejecutar en coroutine
         viewModelScope.launch {
             try {
-                // Llamar al Backend
-                val response = apiClient.login(_username.value, _password.value)
+                val response = apiClient.login(_username.value.trim(), _password.value)
 
-                // Verificar respuesta
                 if (response.token.isNotBlank()) {
-                    // Guardar sesión
                     SessionManager.saveSession(response.token, response.username)
                     apiClient.setToken(response.token)
-
-                    // Éxito
                     _uiState.value = LoginUiState.Success
                 } else {
-                    // Error del servidor
                     _uiState.value = LoginUiState.Error(response.mensaje)
                 }
 
             } catch (e: Exception) {
-                // Error de red u otro
                 _uiState.value = LoginUiState.Error(
                     e.message ?: "Error de conexión"
                 )
@@ -94,10 +141,9 @@ class LoginViewModel : ViewModel() {
     }
 
     /**
-     * Resetea el estado a Idle (útil después de mostrar un error).
+     * Resetea el estado a Idle.
      */
     fun resetState() {
         _uiState.value = LoginUiState.Idle
     }
 }
-

@@ -13,6 +13,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -28,23 +29,22 @@ import org.abel.mobile.ui.navigation.AppRoutes
 
 /**
  * Pantalla de Login.
- * Muestra formulario y maneja la navegación después del login exitoso.
  */
 @Composable
 fun LoginScreen(
     navController: NavHostController,
     viewModel: LoginViewModel = viewModel()
 ) {
-    // Observar estados del ViewModel
     val uiState by viewModel.uiState.collectAsState()
     val username by viewModel.username.collectAsState()
     val password by viewModel.password.collectAsState()
+    val usernameError by viewModel.usernameError.collectAsState()
+    val passwordError by viewModel.passwordError.collectAsState()
 
     // Navegar cuando el login es exitoso
     LaunchedEffect(uiState) {
         if (uiState is LoginUiState.Success) {
             navController.navigate(AppRoutes.EVENTOS) {
-                // Eliminar Login del back stack para que no pueda volver
                 popUpTo(AppRoutes.LOGIN) { inclusive = true }
             }
         }
@@ -79,10 +79,16 @@ fun LoginScreen(
             label = { Text("Usuario") },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
-            enabled = uiState !is LoginUiState.Loading
+            enabled = uiState !is LoginUiState.Loading,
+            isError = usernameError != null,
+            supportingText = {
+                usernameError?.let {
+                    Text(text = it, color = MaterialTheme.colorScheme.error)
+                }
+            }
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         // Campo Contraseña
         OutlinedTextField(
@@ -93,12 +99,18 @@ fun LoginScreen(
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             modifier = Modifier.fillMaxWidth(),
-            enabled = uiState !is LoginUiState.Loading
+            enabled = uiState !is LoginUiState.Loading,
+            isError = passwordError != null,
+            supportingText = {
+                passwordError?.let {
+                    Text(text = it, color = MaterialTheme.colorScheme.error)
+                }
+            }
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-        // Mostrar error si existe
+        // Mostrar error general
         if (uiState is LoginUiState.Error) {
             Text(
                 text = (uiState as LoginUiState.Error).mensaje,
@@ -118,6 +130,15 @@ fun LoginScreen(
             ) {
                 Text("Ingresar")
             }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Enlace a Registro
+        TextButton(
+            onClick = { navController.navigate(AppRoutes.REGISTRO) }
+        ) {
+            Text("¿No tienes cuenta? Regístrate")
         }
     }
 }

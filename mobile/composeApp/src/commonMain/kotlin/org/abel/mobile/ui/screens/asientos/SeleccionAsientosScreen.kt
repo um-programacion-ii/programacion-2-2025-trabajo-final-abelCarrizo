@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,13 +28,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -58,9 +62,36 @@ fun SeleccionAsientosScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
+    // Estado para mostrar diálogo de confirmación de salida
+    var mostrarDialogoSalir by remember { mutableStateOf(false) }
+
     // Cargar asientos al entrar
     LaunchedEffect(eventoId) {
         viewModel.cargarAsientos(eventoId)
+    }
+
+    // Diálogo de confirmación de salida
+    if (mostrarDialogoSalir) {
+        AlertDialog(
+            onDismissRequest = { mostrarDialogoSalir = false },
+            title = { Text("¿Abandonar selección?") },
+            text = { Text("Si sales ahora, perderás los asientos que hayas seleccionado.") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        mostrarDialogoSalir = false
+                        navController.popBackStack()
+                    }
+                ) {
+                    Text("Sí, salir", color = MaterialTheme.colorScheme.error)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { mostrarDialogoSalir = false }) {
+                    Text("Continuar seleccionando")
+                }
+            }
+        )
     }
 
     Scaffold(
@@ -68,7 +99,15 @@ fun SeleccionAsientosScreen(
             TopAppBar(
                 title = { Text("Seleccionar Asientos") },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = {
+                        // Mostrar diálogo si hay asientos seleccionados
+                        val state = uiState
+                        if (state is AsientosUiState.Success && state.seleccionados.isNotEmpty()) {
+                            mostrarDialogoSalir = true
+                        } else {
+                            navController.popBackStack()
+                        }
+                    }) {
                         Text("←", style = MaterialTheme.typography.titleLarge)
                     }
                 }
