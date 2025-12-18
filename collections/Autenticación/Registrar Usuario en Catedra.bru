@@ -1,0 +1,28 @@
+meta {
+  name: Registrar Usuario en Catedra
+  type: http
+  seq: 5
+}
+
+post {
+  url: http://192.168.194.250:8080/api/v1/agregar_usuario
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "username": "abelcarrizo",
+      "password": "password",
+      "firstName": "Abel",
+      "lastName": "Carrizo",
+      "email": "abel@email.com",
+      "nombreAlumno": "Abel Carrizo",
+      "descripcionProyecto": "Sistema de registro de eventos"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

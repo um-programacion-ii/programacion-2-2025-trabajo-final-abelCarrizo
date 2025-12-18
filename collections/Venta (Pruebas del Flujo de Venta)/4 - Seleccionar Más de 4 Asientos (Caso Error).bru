@@ -1,0 +1,37 @@
+meta {
+  name: 4 - Seleccionar Más de 4 Asientos (Caso Error)
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{backend_url}}/api/ventas/seleccionar
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3VhcmlvX3BydWViYSIsImlhdCI6MTc2NTc2NDQxMywiZXhwIjoxNzY1NzY2MjEzfQ.rxQnLtkY-W8Md85n7CghLp83ohGYX5-IeOGDhEVbtM0qgrooUZCr_ULtMnBl_00JiaL7oMH6n2rsAkkETpuLjA
+}
+
+body:json {
+  {
+      "eventoId": 1,
+      "asientos": [
+          {"fila": 1, "columna": 1},
+          {"fila": 1, "columna": 2},
+          {"fila": 1, "columna": 3},
+          {"fila": 1, "columna": 4},
+          {"fila": 1, "columna": 5}
+      ]
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

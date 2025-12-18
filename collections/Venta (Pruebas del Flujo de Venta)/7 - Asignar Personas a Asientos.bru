@@ -1,0 +1,29 @@
+meta {
+  name: 7 - Asignar Personas a Asientos
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{backend_url}}/api/ventas/asignar-personas
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3VhcmlvX3BydWViYSIsImlhdCI6MTc2NTc2NTM1OCwiZXhwIjoxNzY1NzY3MTU4fQ.UCq61wTm4esUEgsM3X6dsXAQoUXjHIOpE4dSz9DLzAjt5uXcCFQqfw7b5nOqueUOnxs4T3ZuwSZ7TrzO_V8yyg
+}
+
+body:json {
+  {
+      "asientos": [
+          {"fila": 4, "columna": 1, "persona": "Juan Pérez"},
+          {"fila": 4, "columna": 2, "persona": "María García"}
+      ]
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

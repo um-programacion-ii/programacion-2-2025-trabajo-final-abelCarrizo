@@ -1,0 +1,20 @@
+meta {
+  name: 3 - Estado Sesión Actual
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{backend_url}}/api/sesion
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3VhcmlvX3BydWViYSIsImlhdCI6MTc2NTc2NTM1OCwiZXhwIjoxNzY1NzY3MTU4fQ.UCq61wTm4esUEgsM3X6dsXAQoUXjHIOpE4dSz9DLzAjt5uXcCFQqfw7b5nOqueUOnxs4T3ZuwSZ7TrzO_V8yyg
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,0 +1,20 @@
+meta {
+  name: Obtener Detalle de Evento
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{backend_url}}/api/eventos/{{evento_id}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3VhcmlvX3BydWViYSIsImlhdCI6MTc2NTcyOTA0MywiZXhwIjoxNzY1NzMwODQzfQ.L-MKUc4e0UoQyC29qkGpRw6vaDlaAcyBHj3U-ApVxKNbksV6fNwc9Pi0ZaKAS6o9Q9Y5N3Jb3kY1zZfQ45kClw
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

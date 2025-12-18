@@ -1,0 +1,30 @@
+meta {
+  name: Registro Usuario
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{backend_url}}/api/auth/registro
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+      "username": "usuario_prueba",
+      "password": "password123",
+      "email": "prueba@ejemplo.com",
+      "nombre": "Usuario",
+      "apellido": "Prueba"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,0 +1,31 @@
+meta {
+  name: Login
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{backend_url}}/api/auth/login
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+      "username": "usuario_prueba",
+      "password": "password123"
+  }
+}
+
+script:post-response {
+  bru.setVar("token",res.body.token)
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
