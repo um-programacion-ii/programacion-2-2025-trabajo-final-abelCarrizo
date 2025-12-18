@@ -1,0 +1,16 @@
+meta {
+  name: Asientos Ocupados
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{proxy_url}}/api/proxy/eventos/1/asientos
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

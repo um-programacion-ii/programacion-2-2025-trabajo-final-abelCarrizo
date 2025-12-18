@@ -1,0 +1,29 @@
+meta {
+  name: Verificar Disponibilidad
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{proxy_url}}/api/proxy/eventos/1/verificar
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+      "asientos": [
+          {"fila": 1, "columna": 1},
+          {"fila": 1, "columna": 2}
+      ]
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
